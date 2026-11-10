@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Super Thanks Reader</title>
+<title>ttp fund</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
 </head>
 <body>
 <main>
-  <h1>Super Thanks Reader</h1>
+  <h1>ttp fund</h1>
   <p class="note">A fan-made tool for the Triple Trouble Podcast — so every Super Thanks gets read.</p>
 
   <form id="f">
@@ -69,7 +69,7 @@ function block(title, video, rows) {
 }
 
 fetch("/ttp_latest.json").then(r => r.json()).then(d => {
-  $("latest").innerHTML = block("Latest TTP episode — Super Thanks", d.video, d.results);
+  $("latest").innerHTML = block("Latest TTP episode", d.video, d.results);
 }).catch(() => {});
 
 $("f").addEventListener("submit", async e => {
@@ -78,7 +78,9 @@ $("f").addEventListener("submit", async e => {
   $("status").textContent = "Reading comments… big videos can take a minute.";
   try {
     const res = await fetch("/api/thanks?url=" + encodeURIComponent($("url").value.trim()));
-    const d = await res.json();
+    let d;
+    try { d = await res.json(); }
+    catch { throw new Error("Search isn't available here — it only works on the deployed site (or with `vercel dev`)."); }
     if (!res.ok) throw new Error(d.error || "Something went wrong.");
     $("status").textContent = d.count ? "" : `No Super Thanks found in ${d.scanned} comments.`;
     if (d.count) {
